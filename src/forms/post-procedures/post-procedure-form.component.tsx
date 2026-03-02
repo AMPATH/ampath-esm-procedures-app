@@ -35,7 +35,7 @@ import {
 import dayjs from "dayjs";
 import { mutate } from "swr";
 import { type CodedCondition, type CodedProvider, type Order } from "../../types";
-import { type Config, StringPath } from "../../config-schema";
+import { Config, StringPath } from "../../config-schema";
 
 const validationSchema = z.object({
   startDatetime: z.date({ required_error: "Start datetime is required" }),

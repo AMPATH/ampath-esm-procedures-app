@@ -1,11 +1,11 @@
 import useSWR from "swr";
 import {
-  type OpenmrsResource,
+  OpenmrsResource,
   openmrsFetch,
   restBaseUrl,
   useConfig,
 } from "@openmrs/esm-framework";
-import { type CodedProvider, type CodedCondition } from "../../types";
+import { CodedProvider, CodedCondition } from "../../types";
 
 type Provider = {
   uuid: string;
