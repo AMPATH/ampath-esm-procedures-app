@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@carbon/react';
 import { showModal, type Order } from '@openmrs/esm-framework';
 import styles from './actions.scss';
-import { BillStatus } from '../types';
+import { type BillStatus } from '../types';
 
 interface PickProcedureRequestActionMenuProps {
   order: Order;
