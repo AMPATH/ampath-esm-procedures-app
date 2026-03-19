@@ -21,7 +21,7 @@ const PickupProcedureRequestAction: React.FC<PickProcedureRequestActionMenuProps
     });
   }, [order]);
 
-  return billStatus === 'PAID' ? (
+  return billStatus === 'PAID' || billStatus === 'POSTED' ? (
     <Button
       className={styles.actionButton}
       disabled={unsupportedStatuses.includes(order.fulfillerStatus)}
