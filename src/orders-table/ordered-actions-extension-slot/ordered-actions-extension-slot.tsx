@@ -56,8 +56,8 @@ const OrderedActionsExtensionSlot: React.FC<OrderedActionsExtensionSlotProps> = 
             }
           }
         }
-      } catch (er) {
-
+      } catch (error) {
+        console.error(error);
       } finally {
         setIsLoadingOdooBills(false);
       }
