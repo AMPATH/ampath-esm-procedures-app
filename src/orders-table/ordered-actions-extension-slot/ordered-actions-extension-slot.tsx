@@ -2,7 +2,7 @@ import { ExtensionSlot, useConfig } from '@openmrs/esm-framework';
 import { type BillInvoice, type BillStatus, type Order } from '../../types';
 import React, { useEffect, useState } from 'react';
 import { getOrderNumberFromHie, useInvalidateBills, getOdooBills } from '../../bill/bill.resource';
-import { Config } from '../../config-schema';
+import { type Config } from '../../config-schema';
 
 interface OrderedActionsExtensionSlotProps {
   order: Order;
