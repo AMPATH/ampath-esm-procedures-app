@@ -42,7 +42,7 @@ const OrderedActionsExtensionSlot: React.FC<OrderedActionsExtensionSlotProps> = 
 
     const odooBills = async () => {
       const results = await getOdooBills(order?.patient?.uuid);
-      if (results.orders[0].order_lines && results.orders[0].order_lines.length) {
+      if (results.orders && results.orders.length && results.orders[0].order_lines && results.orders[0].order_lines.length) {
         const currentOrder = results.orders[0].order_lines.find(o => o.openmrs_order_id === order?.uuid);
         if (currentOrder) {
           if (currentOrder.billing_status.toUpperCase() === "PAID") {
