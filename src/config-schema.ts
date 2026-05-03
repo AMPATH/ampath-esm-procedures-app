@@ -11,11 +11,17 @@ export const configSchema = {
     _default: '3adeq9de-5545-4272-add4-a661005f781e',
     _description: 'Procedures billable service type',
   },
+  enableOdooBilling: {
+    _type: Type.Boolean,
+    _default: false,
+    _description: 'Enable Odoo billing'
+  }
 };
 
 export type Config = {
   procedureOrderTypeUuid: string;
   proceduresServiceTypedUuid: string;
+  enableOdooBilling: boolean;
 };
 
 export const StringPath =
