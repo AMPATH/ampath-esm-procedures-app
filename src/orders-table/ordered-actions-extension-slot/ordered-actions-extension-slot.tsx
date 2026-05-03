@@ -3,6 +3,7 @@ import { type BillInvoice, type BillStatus, type Order } from '../../types';
 import React, { useEffect, useState } from 'react';
 import { getOrderNumberFromHie, useInvalidateBills, getOdooBills } from '../../bill/bill.resource';
 import { type Config } from '../../config-schema';
+import { InlineLoading } from '@carbon/react';
 
 interface OrderedActionsExtensionSlotProps {
   order: Order;
@@ -12,6 +13,7 @@ interface OrderedActionsExtensionSlotProps {
 
 const OrderedActionsExtensionSlot: React.FC<OrderedActionsExtensionSlotProps> = ({ order, bills, isLoading }) => {
   const [status, setStatus] = useState<BillStatus>('BLANK');
+  const [isLoadingOdooBills, setIsLoadingOdooBills] = useState(false);
   const invalidateBills = useInvalidateBills(order?.patient?.uuid);
   const { enableOdooBilling } = useConfig<Config>();
 
@@ -41,16 +43,23 @@ const OrderedActionsExtensionSlot: React.FC<OrderedActionsExtensionSlotProps> = 
     };
 
     const odooBills = async () => {
-      const results = await getOdooBills(order?.patient?.uuid);
-      if (results.orders && results.orders.length && results.orders[0].order_lines && results.orders[0].order_lines.length) {
-        const currentOrder = results.orders[0].order_lines.find(o => o.openmrs_order_id === order?.uuid);
-        if (currentOrder) {
-          if (currentOrder.billing_status.toUpperCase() === "PAID") {
-            setStatus("PAID");
-          } else {
-            setStatus("PENDING")
+      try {
+        setIsLoadingOdooBills(true);
+        const results = await getOdooBills(order?.patient?.uuid);
+        if (results.orders && results.orders.length && results.orders[0].order_lines && results.orders[0].order_lines.length) {
+          const currentOrder = results.orders[0].order_lines.find(o => o.openmrs_order_id === order?.uuid);
+          if (currentOrder) {
+            if (currentOrder.billing_status.toUpperCase() !== "PAID") {
+              setStatus("PAID");
+            } else {
+              setStatus("PENDING")
+            }
           }
         }
+      } catch (er) {
+
+      } finally {
+        setIsLoadingOdooBills(false);
       }
     }
 
@@ -62,6 +71,10 @@ const OrderedActionsExtensionSlot: React.FC<OrderedActionsExtensionSlotProps> = 
       }
     }
   }, [order, bills, enableOdooBilling]);
+
+  if (isLoadingOdooBills) {
+    return <InlineLoading />
+  }
 
   return (
     <ExtensionSlot state={{ order: order, billStatus: status, isLoading, mutated }} name="procedures-ordered-actions-slot" />
