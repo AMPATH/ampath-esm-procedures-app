@@ -15,6 +15,7 @@
       "name": "procedures-dashboard-link",
       "component": "proceduresDashboardLink",
       "slot": "homepage-dashboard-slot",
+      "privileges": ["O3 View Procedures Dashboard"],
       "meta": {
         "name": "procedures",
         "slot": "procedures-dashboard-slot",
@@ -26,7 +27,8 @@
     {
       "component": "root",
       "name": "procedures",
-      "slot": "procedures-dashboard-slot"
+      "slot": "procedures-dashboard-slot",
+      "privileges": ["O3 View Procedures Dashboard"]
     },
     {
       "name": "pickup-procedure-request-modal",
