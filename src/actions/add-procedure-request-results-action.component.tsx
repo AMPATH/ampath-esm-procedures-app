@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Button } from '@carbon/react';
 import { useTranslation } from 'react-i18next';
-import { AddIcon, launchWorkspace, useConfig } from '@openmrs/esm-framework';
+import { AddIcon, launchWorkspace, launchWorkspace2, useConfig } from '@openmrs/esm-framework';
 import { type Order } from '@openmrs/esm-framework';
 import { type Config } from '../config-schema';
 import styles from './actions.scss';
@@ -20,6 +20,25 @@ const AddProcedureRequestResultsAction: React.FC<AddProcedureRequestResultsActio
       order
     });
   };
+
+  const launchProceduresForm = useCallback(
+    () => {
+      console.log(order);
+      return launchWorkspace2('procedures-form-workspace', {
+        formContext: 'creating',
+        procedure: {
+          procedureCoded: {
+            uuid: order?.concept?.uuid,
+            display: order?.concept?.display
+          }
+        }
+      }, {},
+        {
+          patientUuid: order?.patient?.uuid
+        })
+    },
+    [],
+  );
 
   return (
     <Button
