@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { Button } from '@carbon/react';
 import { useTranslation } from 'react-i18next';
-import { AddIcon, launchWorkspace, launchWorkspace2, useConfig } from '@openmrs/esm-framework';
+import { AddIcon, launchWorkspace2, useConfig } from '@openmrs/esm-framework';
 import { type Order } from '@openmrs/esm-framework';
 import { type Config } from '../config-schema';
 import styles from './actions.scss';
@@ -15,7 +15,7 @@ const AddProcedureRequestResultsAction: React.FC<AddProcedureRequestResultsActio
   const { procedureOrderTypeUuid } = useConfig<Config>();
 
   const launchTestResultsWorkspace = () => {
-    launchWorkspace('post-procedure-form-workspace', {
+    launchWorkspace2('post-procedure-form-workspace', {
       patient: order.patient,
       order
     });

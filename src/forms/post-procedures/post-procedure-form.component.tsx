@@ -1,11 +1,12 @@
 import React, { useCallback, useState } from "react";
 import {
-  closeWorkspace,
   OpenmrsDatePicker,
   showSnackbar,
   useConfig,
   useDebounce,
   useSession,
+  Workspace2,
+  type Workspace2DefinitionProps,
 } from "@openmrs/esm-framework";
 import {
   Form,
@@ -49,13 +50,16 @@ const validationSchema = z.object({
 
 type PostProcedureFormSchema = z.infer<typeof validationSchema>;
 
-type PostProcedureFormProps = {
-  order: Order;
-};
+type PostProcedureFormProps = Pick<
+  Workspace2DefinitionProps<{ order: Order }>,
+  "closeWorkspace" | "workspaceProps"
+> & { workspaceProps: { order: Order } };
 
 const PostProcedureForm: React.FC<PostProcedureFormProps> = ({
-  order
+  closeWorkspace,
+  workspaceProps,
 }) => {
+  const { order } = workspaceProps;
   const { sessionLocation } = useSession();
   const { t } = useTranslation();
   const invalidateOrders = useInvalidateProcedureOrders();
@@ -119,7 +123,7 @@ const PostProcedureForm: React.FC<PostProcedureFormProps> = ({
 
   const {
     control,
-    formState: { errors },
+    formState: { errors, isDirty },
     handleSubmit,
   } = useForm<PostProcedureFormSchema>({
     defaultValues: {},
@@ -179,19 +183,19 @@ const PostProcedureForm: React.FC<PostProcedureFormProps> = ({
       // ) {
 
       // } 
-      updateOrder(order.uuid, body) &&
-        showSnackbar({
-          title: t("procedureSaved", "Procedure saved"),
-          subtitle: t(
-            "procedureSavedSuccessfully",
-            "Procedure saved successfully"
-          ),
-          timeoutInMs: 5000,
-          isLowContrast: true,
-          kind: "success",
-        });
+      await updateOrder(order.uuid, body);
+      showSnackbar({
+        title: t("procedureSaved", "Procedure saved"),
+        subtitle: t(
+          "procedureSavedSuccessfully",
+          "Procedure saved successfully"
+        ),
+        timeoutInMs: 5000,
+        isLowContrast: true,
+        kind: "success",
+      });
       invalidateOrders();
-      closeWorkspace('post-procedure-form-workspace');
+      await closeWorkspace({ discardUnsavedChanges: true });
     } catch (error) {
       showSnackbar({
         title: t("error", "Error"),
@@ -208,10 +212,14 @@ const PostProcedureForm: React.FC<PostProcedureFormProps> = ({
   };
 
   return (
-    <Form
-      onSubmit={handleSubmit(onSubmit, onError)}
-      className={styles.formContainer}
+    <Workspace2
+      title={t("procedureResults", "Procedure results")}
+      hasUnsavedChanges={isDirty || selectedParticipants.length > 0 || selectedItems.length > 0}
     >
+      <Form
+        onSubmit={handleSubmit(onSubmit, onError)}
+        className={styles.formContainer}
+      >
       <Stack gap={4}>
         <Layer>
           <FormLabel className={styles.formLabel}>
@@ -464,14 +472,20 @@ const PostProcedureForm: React.FC<PostProcedureFormProps> = ({
         </Layer>
       </Stack>
       <ButtonSet className={styles.buttonSetContainer}>
-        <Button onClick={() => closeWorkspace('post-procedure-form-workspace')} size="lg" kind="secondary">
+        <Button
+          type="button"
+          onClick={() => closeWorkspace({ discardUnsavedChanges: true })}
+          size="lg"
+          kind="secondary"
+        >
           {t("discard", "Discard")}
         </Button>
         <Button type="submit" size="lg" kind="primary">
           {t("saveAndClose", "Save & Close")}
         </Button>
       </ButtonSet>
-    </Form>
+      </Form>
+    </Workspace2>
   );
 };
 

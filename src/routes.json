@@ -139,12 +139,24 @@
       }
     }
   ],
-  "workspaces": [
+  "workspaceGroups2": [
+    {
+      "name": "procedures-workspace-group",
+      "persistence": "closable"
+    }
+  ],
+  "workspaceWindows2": [
+    {
+      "name": "procedures-workspace-window",
+      "group": "procedures-workspace-group",
+      "width": "narrow"
+    }
+  ],
+  "workspaces2": [
     {
       "name": "post-procedure-form-workspace",
       "component": "postProcedureForm",
-      "title": "procedure results",
-      "type": "other-form"
+      "window": "procedures-workspace-window"
     }
   ]
 }
